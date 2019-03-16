@@ -1,0 +1,450 @@
+{% load static %}
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Creative - Bootstrap 3 Responsive Admin Template">
+  <meta name="author" content="GeeksLabs">
+  <meta name="keyword" content="Creative, Dashboard, Admin, Template, Theme, Bootstrap, Responsive, Retina, Minimal">
+  <link rel="shortcut icon" href="img/favicon.png">
+
+  <title>TeamWork</title>
+
+    <!-- Bootstrap CSS -->
+  <link href="{% static 'teamwork/css/bootstrap.min.css' %}" rel="stylesheet">
+  <!-- bootstrap theme -->
+  <link href="{% static 'teamwork/css/bootstrap-theme.css' %}" rel="stylesheet">
+  <!--external css-->
+  <!-- font icon -->
+  <link href="{% static 'teamwork/css/elegant-icons-style.css' %}" rel="stylesheet">
+  <link href="{% static 'teamwork/css/font-awesome.min.css' %}" rel="stylesheet">
+  <!-- full calendar css-->
+    <link href="{% static 'teamwork/assets/fullcalendar/fullcalendar/bootstrap-fullcalendar.css' %}" rel="stylesheet">
+     <link href="{% static 'teamwork/assets/fullcalendar/fullcalendar/fullcalendar.css' %}" rel="stylesheet">
+  <!-- easy pie chart-->
+     <link href="{% static 'teamwork/assets/jquery-easy-pie-chart/jquery.easy-pie-chart.css' %}" rel="stylesheet">
+  <!-- owl carousel -->
+     <link href="{% static 'teamwork/css/owl.carousel.css' %}" rel="stylesheet">
+  <link href="{% static 'teamwork/css/jquery-jvectormap-1.2.2.css' %}" rel="stylesheet">
+  <!-- Custom styles -->
+    <link rel="stylesheet" href="{% static 'teamwork/css/fullcalendar.css' %}">
+    <link href="{% static 'teamwork/css/widgets.css' %}" rel="stylesheet">
+    <link href="{% static 'teamwork/css/style.css' %}" rel="stylesheet">
+    <link href="{% static 'teamwork/css/style-responsive.css' %}" rel="stylesheet">
+    <link href="{% static 'teamwork/css/xcharts.min.css' %}" rel="stylesheet">
+    <link href="{% static 'teamwork/css/jquery-ui-1.10.4.min.css' %}" rel="stylesheet">
+  <!-- =======================================================
+    Theme Name: NiceAdmin
+    Theme URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
+    Author: BootstrapMade
+    Author URL: https://bootstrapmade.com
+  ======================================================= -->
+    <!-- javascripts -->
+  <script src="{% static 'teamwork/js/jquery.js' %}"></script>
+  <script src="{% static 'teamwork/js/jquery-ui-1.10.4.min.js.js' %}"></script>
+  <script src="{% static 'teamwork/js/jquery-1.8.3.min.jsjs' %}"></script>
+  <script type="text/javascript" src=".{% static 'teamwork/js/jquery-ui-1.9.2.custom.min.js' %}"></script>
+  <!-- bootstrap -->
+  <script src="{% static 'teamwork/js/bootstrap.min.js' %}"></script>
+  <!-- nice scroll -->
+  <script src="{% static 'teamwork/js/jquery.scrollTo.min.js' %}"></script>
+  <script src="{% static 'teamwork/js/jquery.nicescroll.js' %}"></script>
+  <!-- charts scripts -->
+  <script src="{% static 'teamwork/assets/jquery-knob/js/jquery.knob.js' %}"></script>
+  <script src="{% static 'teamwork/js/jquery.sparkline.js' %}" type="text/javascript"></script>
+  <script src="{% static 'teamwork/assets/jquery-easy-pie-chart/jquery.easy-pie-chart.js' %}"></script>
+  <script src="{% static 'teamwork/js/owl.carousel.js' %}"></script>
+  <!-- jQuery full calendar -->
+  <script src="{% static 'teamwork/js/fullcalendar.min.js' %}"></script>
+    <!-- Full Google Calendar - Calendar -->
+  <script src="{% static 'teamwork/assets/fullcalendar/fullcalendar/fullcalendar.js' %}"></script>
+    <!--script for this page only-->
+  <script src="{% static 'teamwork/js/calendar-custom.js' %}"></script>
+  <script src="{% static 'teamwork/js/jquery.rateit.min.js' %}"></script>
+    <!-- custom select -->
+  <script src="{% static 'teamwork/js/jquery.customSelect.min.js' %}"></script>
+  <script src="{% static 'teamwork/assets/chart-master/Chart.js' %}"></script>
+
+    <!--custome script for all page-->
+  <script src="{% static 'teamwork/js/scripts.js' %}"></script>
+    <!-- custom script for this page-->
+  <script src="{% static 'teamwork/js/sparkline-chart.js' %}"></script>
+  <script src="{% static 'teamwork/js/easy-pie-chart.js' %}"></script>
+  <script src="{% static 'teamwork/js/jquery-jvectormap-1.2.2.min.js' %}"></script>
+  <script src="{% static 'teamwork/js/jquery-jvectormap-world-mill-en.js' %}"></script>
+  <script src="{% static 'teamwork/js/xcharts.min.js' %}"></script>
+  <script src="{% static 'teamwork/js/jquery.autosize.min.js' %}"></script>
+  <script src="{% static 'teamwork/js/jquery.placeholder.min.js' %}"></script>
+  <script src="{% static 'teamwork/js/gdp-data.js' %}"></script>
+  <script src="{% static 'teamwork/js/morris.min.js' %}"></script>
+  <script src="{% static 'teamwork/js/sparklines.js' %}"></script>
+  <script src="{% static 'teamwork/js/charts.js' %}"></script>
+  <script src="{% static 'teamwork/js/jquery.slimscroll.min.js' %}"></script>
+    <script>
+      //knob
+      $(function() {
+        $(".knob").knob({
+          'draw': function() {
+            $(this.i).val(this.cv + '%')
+          }
+        })
+      });
+
+      //carousel
+      $(document).ready(function() {
+        $("#owl-slider").owlCarousel({
+          navigation: true,
+          slideSpeed: 300,
+          paginationSpeed: 400,
+          singleItem: true
+
+        });
+      });
+
+      //custom select box
+
+      $(function() {
+        $('select.styled').customSelect();
+      });
+
+      /* ---------- Map ---------- */
+      $(function() {
+        $('#map').vectorMap({
+          map: 'world_mill_en',
+          series: {
+            regions: [{
+              values: gdpData,
+              scale: ['#000', '#000'],
+              normalizeFunction: 'polynomial'
+            }]
+          },
+          backgroundColor: '#eef3f7',
+          onLabelShow: function(e, el, code) {
+            el.html(el.html() + ' (GDP - ' + gdpData[code] + ')');
+          }
+        });
+      });
+      /* script para filtrar los estudiantes */
+      $(document).ready(function () {
+
+            (function ($) {
+
+                $('#filtrar').keyup(function () {
+
+                    var rex = new RegExp($(this).val(), 'i');
+                    $('.buscar tr').hide();
+                    $('.buscar tr').filter(function () {
+                        return rex.test($(this).text());
+                    }).show();
+
+                })
+
+            }(jQuery));
+
+        });
+      $(document).ready(function () {
+
+            $("#err").hide();
+            (function ($) {
+
+                $('#filtrarest').keyup(function () {
+
+                    var val=$("#filtrarest").val();
+
+                    var obj=$("#est").find("option[value='"+val+"']");
+
+                    if(obj !=null && obj.length>0){
+                        $("#submit").removeAttr('disabled');
+                        $("#err").fadeOut(500);
+                    }
+
+                    else{
+                        $("#err").fadeIn(500);
+                        $("#submit").attr('disabled', 'disabled');
+                    }
+                })
+            }(jQuery));
+
+        });
+
+
+    </script>
+        <style type="text/css">
+        .shortNotify{
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    </style>
+</head>
+
+<body>
+  <!-- container section start -->
+  <section id="container" class="">
+
+
+    <header class="header dark-bg">
+      <div class="toggle-nav">
+        <div class="icon-reorder tooltips" data-original-title="Toggle Navigation" data-placement="bottom"><i class="icon_menu"></i></div>
+      </div>
+
+      <!--logo start-->
+      <a href="{% url 'teamwork:index' %}" class="logo">Team <span class="lite">Work</span></a>
+      <!--logo end-->
+
+      <!--<div class="nav search-row" id="top_menu">
+        <!--  search form start --
+        <ul class="nav top-menu">
+          <li>
+            <form class="navbar-form">
+              <input class="form-control" placeholder="Search" type="text">
+            </form>
+          </li>
+        </ul>
+        <!--  search form end 
+      </div>-->
+
+      <div class="top-nav notification-row">
+        <!-- notificatoin dropdown start-->
+        <ul class="nav pull-right top-menu">
+
+          <!-- task notificatoin start -->
+          <li id="task_notificatoin_bar" class="dropdown">
+            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                <i class="icon-task-l"></i>
+                <span class="badge bg-important">{{ total_teams }}</span>
+            </a>
+            <ul class="dropdown-menu extended tasks-bar">
+              <div class="notify-arrow notify-arrow-blue"></div>
+              <li>
+                <p class="blue">Estado de Mis Equipos</p>
+              </li>
+              {% for e in misequiposbarra %}
+                <li class="tooltips"  data-placement="bottom" data-toggle="tooltip " title="Realizadas: {{ e.3 }} | Por Hacer: {{ e.4 }}">
+                    <a href="{% url 'teamwork:VerEquipo' e.0.pk %} "><!--FIXME Ref a VER EQUIPO DA PALO-->
+                      <div class="task-info">
+                        <div class="desc"> {{ e.0.nombre }} </div>
+                        <div class="percent">{{ e.1|floatformat }}%</div>
+                      </div>
+                      <div class="progress progress-striped active">
+                        <div class="progress-bar progress-bar-{{ e.2 }}" role="progressbar" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100" style="width: {{ e.1 }}%">
+                          <span class="sr-only">{{ e.1|floatformat }}% Complete (success)</span>
+                        </div>
+                      </div>
+                    </a>
+                </li>
+              {% endfor %}
+              <li class="external">
+                <a href="{% url 'teamwork:MostrarEquipos' %}">See All Tasks</a>
+              </li>
+            </ul>
+          </li>
+          <!-- task notificatoin end -->
+
+          <!-- alert notification start-->
+          <li id="alert_notificatoin_bar" class="dropdown">
+            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+
+                            <i class="icon-bell-l"></i>
+
+                                {% if total_notifi > 0 %}
+                                    <span class="badge bg-important">{{ total_notifi }}</span>
+                                {% endif %}
+
+                        </a>
+            <ul class="dropdown-menu extended notification">
+              <div class="notify-arrow notify-arrow-blue"></div>
+              <li>
+                {% if total_notifi > 0 %}
+                    <p class="blue">Tienes {{ total_notifi }} notificacion(es) nueva(s)</p>
+                {% else %}
+                    <p class="blue">No tienes nuevas notificaciones.</p>
+                {% endif %}
+              </li>
+              {% for noti in notificaciones5 %}
+                  <li>
+                        {% if noti.tipo == 'add_tarea' or noti.tipo == 'approve_tarea' or noti.tipo == 'pending_tarea' or noti.tipo == 'denied_tarea' %}
+                            <a href="{% url 'teamwork:VerTarea' noti.llave %}">
+                        {% elif noti.tipo == 'add_team' or noti.tipo == 'new_mesage' %}
+                            <a href="{% url 'teamwork:VerEquipo' noti.llave %}">
+                        {% endif %}
+                         <div class="shortNotify">
+                            {% if noti.tipo == 'add_team' %}
+                                <span style="width: 10px; max-width: 10px" class="label label-primary"><i class="icon_group"></i></span>
+                            {% elif noti.tipo == 'del_team' %}
+                                <span style="width: 10px; max-width: 10px" class="label label-danger"><i class="icon_group"></i></span>
+                            {% elif noti.tipo == 'add_tarea' %}
+                                <span style="width: 10px; max-width: 10px" class="label label-primary"><i class="fa fa-tasks"></i></span>
+                            {% elif noti.tipo == 'del_tarea' %}
+                                <span style="width: 10px; max-width: 10px" class="label label-danger"><i class="fa fa-tasks"></i></span>
+                            {% elif noti.tipo == 'approve_tarea' %}
+                                <span style="width: 10px; max-width: 10px" class="label label-success"><i class="icon_check_alt2"></i></span>
+                            {% elif noti.tipo == 'pending_tarea' %}
+                                <span style="width: 10px; max-width: 10px" class="label label-warning"><i class="fa fa-folder"></i></span>
+                            {% elif noti.tipo == 'denied_tarea' %}
+                                <span style="width: 10px; max-width: 10px" class="label label-danger"><i class="icon_minus_alt2"></i></span>
+                            {% elif noti.tipo == 'new_mesage' %}
+                                <span style="width: 10px; max-width: 10px" class="label label-primary"><i class="fa fa-mail-reply"></i></span>
+                            {% endif %}
+
+                            {{ noti.descripcion }}
+                        </div>
+                        <span class="small italic pull-right"> {{ noti.fecha }} </span>
+                    </a>
+                  </li>
+              {% endfor %}
+              <li>
+                <a href="{% url 'teamwork:MostrarPerfil' usuario_log.pk %} ">Ver todas las notificaciones.</a>
+              </li>
+            </ul>
+          </li>
+          <!-- alert notification end-->
+          <!-- user login dropdown start-->
+          <li class="dropdown">
+            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                            <span class="profile-ava">
+                                <i class="icon_profile"></i>
+                            </span>
+                            <span class="username">{{ user.username }}</span>
+                            <b class="caret"></b>
+                        </a>
+            <ul class="dropdown-menu extended logout">
+              <div class="log-arrow-up"></div>
+              <li class="eborder-top">
+                <a href="{% url 'teamwork:MostrarPerfil' usuario_log.pk %} "><i class="icon_profile"></i> Mi Perfil</a>
+              </li>
+              <li>
+                <a href="{% url 'teamwork:Logout' %}"><i class="fa fa-sign-out"></i> Logout</a>
+              </li>
+            </ul>
+          </li>
+          <!-- user login dropdown end -->
+        </ul>
+        <!-- notificatoin dropdown end-->
+      </div>
+    </header>
+    <!--header end-->
+
+    <!--sidebar start-->
+    <aside>
+      <div id="sidebar" class="nav-collapse ">
+        <!-- sidebar menu start-->
+        <ul class="sidebar-menu">
+          <li class="active">
+            <a class="" href="{% url 'teamwork:index' %}">
+                          <i class="icon_house_alt"></i>
+                          <span>Inicio</span>
+                      </a>
+          </li>
+          <li>
+            <a class="" href="{% url 'teamwork:MostrarEstudiantes' %}">
+                          <i class="fa fa-user"></i>
+                          <span>Estudiantes</span>
+                      </a>
+          </li>
+          <li>
+            <a class="" href="{% url 'teamwork:MostrarAsignaturas' %}">
+                          <i class="icon_book"></i>
+                          <span>Asignaturas</span>
+                      </a>
+          </li>
+
+          <li>
+            <a class="" href="{% url 'teamwork:MostrarEquipos' %}">
+                          <i class="icon_group"></i>
+                          <span>Equipos</span>
+                      </a>
+          </li>
+
+          <li>
+            <a class="" href="{% url 'teamwork:MostrarTareas' %}">
+                          <i class="fa fa-tasks"></i>
+                          <span>Tareas</span>
+                      </a>
+          </li>
+
+        </ul>
+        <!-- sidebar menu end-->
+      </div>
+    </aside>
+    <!--sidebar end-->
+
+  <!-- LA FIESTA ES AQUI--><!-- LA FIESTA ES AQUI--><!-- LA FIESTA ES AQUI-->
+  <!-- *************************************************************************-->
+  <!-- *************************************************************************-->
+  <!-- *************************************************************************-->
+  <!-- *************************************************************************-->
+  <!-- *************************************************************************-->
+
+
+    <!--main content start-->
+      {% block content %}
+    <section id="main-content">
+      <section class="wrapper">
+        <!--overview start-->
+        <div class="row">
+          <div class="col-lg-12">
+            <h3 class="page-header"><i class="fa fa-laptop"></i> Inicio </h3>
+            <ol class="breadcrumb">
+              <li><i class="fa fa-home"></i><a href="{% url 'teamwork:index' %}">Home</a></li>
+            </ol>
+          </div>
+        </div>
+
+
+        <div class="row">
+        <a href="{% url 'teamwork:MostrarEstudiantes' %}">
+          <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+            <div class="info-box blue-bg">
+              <i class="fa fa-user"></i>
+              <div class="count">{{ cantEst }}</div>
+              <div class="title">Estudiantes</div>
+            </div>
+            <!--/.info-box-->
+          </div>
+        </a>
+          <!--/.col-->
+
+        <a href="{% url 'teamwork:MostrarAsignaturas' %}">
+          <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+            <div class="info-box brown-bg">
+              <i class="fa fa-book"></i>
+              <div class="count">{{ cantAsig }}</div>
+              <div class="title">Asignaturas</div>
+            </div>
+            <!--/.info-box-->
+          </div>
+        </a>
+          <!--/.col-->
+
+            <a href="{% url 'teamwork:MostrarEquipos' %}">
+          <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+            <div class="info-box dark-bg">
+              <i class="fa fa-group"></i>
+              <div class="count">{{ cantEquip }}</div>
+              <div class="title">Equipos</div>
+            </div>
+            <!--/.info-box-->
+          </div>
+                </a>
+          <!--/.col-->
+
+        <a href="{% url 'teamwork:MostrarTareas' %}">
+          <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+            <div class="info-box green-bg">
+              <i class="fa fa-tasks"></i>
+              <div class="count">{{ cantTareas }}</div>
+              <div class="title">Tareas</div>
+            </div>
+            <!--/.info-box-->
+          </div>
+        </a>
+          <!--/.col-->
+
+        </div>
+        <!--/.row-->
+  </section>
+  <!-- container section start -->
+    {% endblock %}
+
+
+</body>

@@ -1,0 +1,225 @@
+{% extends 'teamwork/index.html' %}
+
+{% block content %}
+    <section id="main-content">
+      <section class="wrapper">
+        <!--overview start-->
+        <div class="row">
+          <div class="col-lg-12">
+            <h3 class="page-header"><i class="fa fa-tasks"></i> Tareas</h3>
+            <ol class="breadcrumb">
+              <li><a href="{% url 'teamwork:index' %}"><i class="fa fa-home"></i> Home</a></li>
+              <li><a href="{% url 'teamwork:MostrarEquipos' %}"><i class="fa fa-group"></i> Equipos</a></li>
+              <li><a href="{% url 'teamwork:VerEquipo' tarea.equipo.pk %}"><i class="fa fa-group"></i>  {{ tarea.equipo.nombre }}</a></li>
+              <li><a href="{% url 'teamwork:MostrarTareas' %}"><i class="fa fa-tasks"></i> Tareas</a></li>
+              <li><a href="{% url 'teamwork:VerTarea' tarea.pk %}"><i class="fa fa-tasks"></i>  {{ tarea.nombre }}</a></li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-12">
+              {% if tarea.estudiante.pk == est_log.pk or tarea.equipo.jefe.pk == est_log.pk %}
+                  <a class="btn btn-default" href="#RealizarTarea" data-toggle="modal"><span class="icon_documents"></span>  Realizar tarea</a>
+              {% else %}
+                  <a class="btn btn-default disabled" href="RealizarTarea" data-toggle="modal"><span class="icon_documents"></span>  Realizar tarea</a>
+              {% endif %}
+
+              {% if tarea.hecho == 1 and tarea.equipo.jefe.pk == est_log.pk  %}
+                  <a class="btn btn-success" href="{% url 'teamwork:AprobarTareaJefe' tarea.equipo.pk tarea.pk %}" data-toggle="modal"><span class="icon_check"></span>  Aprobar tarea</a>
+              {% else %}
+                  <a class="btn btn-success disabled" data-toggle="modal"><span class="icon_check"></span>  Aprobar tarea</a>
+              {% endif %}
+
+              {% if tarea.hecho != 0 and tarea.equipo.jefe.pk == est_log.pk %}
+                  <a class="btn btn-danger" href="{% url 'teamwork:AnularTareaJefe' tarea.equipo.pk tarea.pk %}" data-toggle="modal"><span class="icon_close"></span>  Anular tarea</a>
+              {% else %}
+                  <a class="btn btn-danger disabled" data-toggle="modal"><span class="icon_close"></span>  Anular tarea</a>
+              {% endif %}
+
+              {% if tarea.equipo.jefe.pk == est_log.pk %}
+                  <a class="btn btn-primary" href="#EditarTarea" data-toggle="modal"><span class="icon_cog"></span>  Editar tarea</a>
+                  <a class="btn btn-danger" href="{% url 'teamwork:EliminarTareaVistaVerEquipo' tarea.equipo.pk tarea.pk %}" data-toggle="modal"><span class="fa fa-trash-o"></span>  Eliminar tarea</a>
+              {% else %}
+                  <a class="btn btn-primary disabled" data-toggle="modal"><span class="icon_cog"></span>  Editar tarea</a>
+                  <a class="btn btn-danger disabled" data-toggle="modal"><span class="fa fa-trash-o"></span>  Eliminar tarea</a>
+              {% endif %}
+          </div>
+          <br>
+      </div>
+
+       <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="EditarTarea" class="modal fade">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                <h4 class="modal-title">Editar tarea</h4>
+              </div>
+              <div class="modal-body">
+
+              <form method="post" action="{% url 'teamwork:EditarTarea' tarea.pk %}">
+                  {% csrf_token %}
+                  <div id="err" class="alert alert-block alert-danger fade in">
+                        <strong>Error</strong>
+                            , el estudiante no pertenece al equipo.
+                  </div>
+                  <div class="form-group">
+                    <label>Nombre</label>
+                    <input value="{{ tarea.nombre }}" name="nombre" class="form-control" placeholder="Nombre de la tarea">
+                  </div>
+                  <div class="form-group">
+                    <label>Descripcion</label>
+                    <textarea style="width: 550px; height: 100px; max-width: 550px; min-width: 550px; min-height: 100px" class="form-control " id="ccomment" name="descripcion" placeholder="Descripcion de la tarea" data-height="180" required>{{ tarea.descripcion }}
+                    </textarea>
+                  </div>
+                  <div class="form-group">
+                    <label>Estudiante</label>
+                    <input value="{{ tarea.estudiante }}" class="form-control" id="filtrarest" list="est" name="estudiante" placeholder="Nombre del estudiante" required/>
+                    <datalist id ="est"/>
+                    {% for e in tarea.equipo.integrantes.all %}
+                         <option value="{{ e }}"/>
+                    {% endfor %}
+                  </div>
+                  <div class="form-group">
+                        <input id="submit" class="btn btn-primary" type="submit" value="Editar">
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="RealizarTarea" class="modal fade">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                <h4 class="modal-title">Realizar tarea</h4>
+              </div>
+              <div class="modal-body">
+
+              <form class="form-validate form-horizontal" id="feedback_form" method="post" action="{% url 'teamwork:RealizarTarea' tarea.pk %}">
+                      {% csrf_token %}
+
+                        <div class="form-group ">
+                              <label for="ccomment" class="control-label col-lg-2">Respuesta</label>
+                              <div class="col-lg-10">
+                                <textarea {{ editar }} class="form-control " id="ccomment" name="texto">{{ tarea.respuesta }}</textarea>
+                              </div>
+                         </div>
+
+                        <div class="form-group">
+                          <div class="col-lg-offset-2 col-lg-10">
+                            <input {{ editar }} class="btn btn-primary" type="submit" value="Salvar">
+                              {% if tarea.hecho == 0 %}
+                                  <a href="{% url 'teamwork:TareaHechoEstudiante' tarea.pk %}"><label class="btn btn-success" >Hecho</label></a>
+                              {% elif tarea.hecho == 1 %}
+                                  <a href="{% url 'teamwork:TareaModificarEstudiante' tarea.pk %}"><label class="btn btn-danger" >Modificar</label></a>
+                              {% else %}
+                                  <label class="btn btn-success disabled" >Hecho</label>
+                              {% endif %}
+
+                          </div>
+                        </div>
+                  </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+         <section class="panel">
+              <div class="panel-body">
+                  <h3 align="center">{{ tarea.nombre }}
+                      {% if tarea.hecho == 2 %}
+                         <td> <span class="label label-success">Hecho</span> </td>
+                      {% elif tarea.hecho == 1 %}
+                        <td> <span class="label label-warning">Pendiente</span> </td>
+                      {% else %}
+                         <td> <span class="label label-danger">Sin hacer</span> </td>
+                      {% endif %}
+                  </h3>
+                  <h4 align="center">Estudiante: {{ tarea.estudiante }},
+                  Equipo: {{ tarea.equipo }} [{{ tarea.equipo.jefe }}],
+                  Asignatura: {{ tarea.equipo.asignatura }}</h4>
+                  <h4 align="center">Descripción:</h4>
+                  <p align="center">
+                      {{ tarea.descripcion }}
+                  </p>
+                  <h4 align="center">Respuesta:</h4>
+                  <p align="center">
+                      {% if tarea.respuesta != '' %}
+                        {{ tarea.respuesta }}
+                      {% else %}
+                         No hay respuesta.
+                      {% endif %}
+                  </p>
+              </div>
+              </div>
+               <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                                      <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                                          Mensajes
+                                      </a>
+                                  </h4>
+                </div>
+                  <div id="collapseOne" class="panel-collapse collapse in">
+                      <div class="panel-body">
+                        <div class="padd sscroll">
+
+                      <ul class="chats">
+
+                        {% for mens in mensaje_tarea %}
+                            {% if mens.de.pk == usuario_log.pk %}
+                                <li class="by-me">
+                                  <div class="avatar pull-left">
+                                    <img src="img/user.jpg" alt="" />
+                                  </div>
+
+                                  <div class="chat-content"> <!--style="background-color: #b5efb5"-->
+                                    <div class="chat-meta"> <a style="color: limegreen" href="{% url 'teamwork:MostrarPerfil' mens.de.pk %}"> {{ mens.de }} </a><span class="pull-right"> {{ mens.fecha }} </span></div>
+                                        <a style="color: #1e90ff" href="{% url 'teamwork:VerTarea' mens.tarea.pk %}"> #{{ mens.tarea.nombre }} </a> {{ mens.texto }}
+                                    <div class="clearfix"></div>
+                                  </div>
+                                </li>
+                            {% else %}
+                                <li class="by-other">
+                                  <div class="avatar pull-right">
+                                    <img src="img/user22.png" alt="" />
+                                  </div>
+
+                                  <div class="chat-content">
+                                    <div class="chat-meta"> {{ mens.fecha }} <span class="pull-right"> <a style="color: crimson" href="{% url 'teamwork:MostrarPerfil' mens.de.pk %}"> {{ mens.de }} </a></span></div>
+                                      <a style="color: #1e90ff" href="{% url 'teamwork:VerTarea' mens.tarea.pk %}"> #{{ mens.tarea.nombre }} </a> {{ mens.texto }}
+                                    <div class="clearfix"></div>
+                                  </div>
+                                </li>
+                            {% endif %}
+                         {% endfor %}
+                                <li class="by-me">
+                                  <div class="avatar pull-left">
+                                    <img src="img/user.jpg" alt="" />
+                                  </div>
+                                <div class="chat-content">
+                                <form method="post" action="{% url 'teamwork:Comentar' tarea.equipo.pk %}">
+                                {% csrf_token %}
+                                <div class="chat-meta" style="color: #b5efb5;"> <a style="color: limegreen" href=""> {{ usuario_log }} </a><span class="pull-right">  </span></div>
+                                    <font color="#1e90ff"> #<select name="tarea" style="border: none">
+                                        <option value="{{ tarea.pk }}">{{ tarea.nombre }}</option>
+                                    </select> </font> <input style="border: none; width: 80%" name="texto" type="text" placeholder="Escriba su comentario..." maxlength="80" on required>
+                                    <button type="submit" class="btn btn-primary">Comentar</button>
+                                </form>
+                                <div class="clearfix"></div>
+                              </div>
+
+                                </li>
+                      </ul>
+
+                    </div>
+                      </div>
+                    </div>
+               </div>
+        </section>
+
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends 'teamwork/index.html' %}
+
+{% block content %}
+
+    <section id="main-content">
+      <section class="wrapper">
+        <!--overview start-->
+        <div class="row">
+          <div class="col-lg-12">
+            <h3 class="page-header"><i class="fa fa-tasks"></i> Tareas</h3>
+            <ol class="breadcrumb">
+              <li><a href="{% url 'teamwork:index' %}"><i class="fa fa-home"></i> Home</a></li>
+              <li><a href="{% url 'teamwork:MostrarTareas' %}"><i class="fa fa-tasks"></i> Tareas</a></li>
+            </ol>
+          </div>
+        </div>
+
+
+      <div class="row">
+          <div class="col-lg-12">
+            <section class="panel">
+              <header class="panel-heading">
+                Mis Tareas
+              </header>
+              {% if mistareas.count > 0 %}
+              <table class="table table-striped table-advance table-hover">
+                <tbody>
+                  <tr>
+                    <th><i class="fa fa-tasks"></i> Tarea</th>
+                    <th><i class="icon_group"></i> Equipo</th>
+                    <th><i class="icon_archive"></i> Estado</th>
+                    <th><i class="icon_cogs"></i> Acciones</th>
+                  </tr>
+                  {% for e in mistareas %}
+                      <tr>
+                            <td> {{ e.nombre }} </td>
+                            <td> {{ e.equipo }} </td>
+                            {% if e.hecho == 2 %}
+                                 <td> <span class="label label-success">Hecho</span> </td>
+                            {% elif e.hecho == 1 %}
+                                <td> <span class="label label-warning">Pendiente</span> </td>
+                            {% else %}
+                                 <td> <span class="label label-danger">Sin hacer</span> </td>
+                            {% endif %}
+
+                            <td>
+                              <div class="btn-group">
+                                <a class="btn btn-success" href="{% url 'teamwork:VerTarea' e.pk %}"><i class="icon_documents"></i></a>
+                              </div>
+                            </td>
+                      </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            {% else %}
+                <div class="alert alert-danger fade in">No tiene asignada ninguna tarea.</div>
+            {% endif %}
+            </section>
+          </div>
+        </div>
+
+{% endblock %}

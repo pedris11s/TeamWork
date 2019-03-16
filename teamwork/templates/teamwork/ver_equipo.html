@@ -1,0 +1,288 @@
+{% extends 'teamwork/index.html' %}
+
+{% block content %}
+    <section id="main-content">
+      <section class="wrapper">
+        <!--overview start-->
+        <div class="row">
+          <div class="col-lg-12">
+            <h3 class="page-header"><i class="fa fa-group"></i> Equipos - {{ equipo.nombre }} ({{ equipo.asignatura }})</h3>
+            <ol class="breadcrumb">
+              <li><a href="{% url 'teamwork:index' %}"><i class="fa fa-home"></i> Home</a></li>
+              <li><a href="{% url 'teamwork:MostrarEquipos' %}"><i class="fa fa-group"></i> Equipos</a></li>
+              <li><a href="{% url 'teamwork:VerEquipo' equipo.pk %}"><i class="fa fa-group"></i> {{ equipo.nombre }}</a></li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                {% if a != 100 %}
+                    <a class="btn btn-success disabled"><span class="icon_upload"></span> Exportar</a>
+                {% else %}
+                    <a class="btn btn-success" href="#PDF" data-toggle="modal"><span class="icon_upload"></span> Exportar</a>
+                {% endif %}
+
+                {% if equipo.jefe.pk == est.pk %}
+                    {% if total != 0 %}
+                      <a class="btn btn-warning" href="#MostrarMensajes" data-toggle="modal"><span class="icon_plus_alt"></span>  Mostrar discucion</a>
+                    {% else %}
+                      <a class="btn btn-warning disabled" href="#MostrarMensajes" data-toggle="modal"><span class="icon_plus_alt"></span>  Mostrar discucion</a>
+                    {% endif %}  
+                    <a class="btn btn-primary" href="#AdicionarTarea" data-toggle="modal"><span class="icon_plus_alt2"></span>  Adicionar tarea</a>
+                    <a class="btn btn-primary" href="{% url 'teamwork:VistaEditarEquipo' equipo.pk %}"><span class="icon_cog"></span> Editar equipo</a>
+                    <a class="btn btn-danger" href="{% url 'teamwork:EliminarEquipo' equipo.pk %}"><span class="fa fa-trash-o"></span> Eliminar equipo</a>
+                {% else %}
+                    {% if total != 0 %}
+                      <a class="btn btn-warning" href="#MostrarMensajes" data-toggle="modal"><span class="icon_plus_alt"></span>  Mostrar discucion</a>
+                    {% else %}
+                      <a class="btn btn-warning disabled" href="#MostrarMensajes" data-toggle="modal"><span class="icon_plus_alt"></span>  Mostrar discucion</a>
+                    {% endif %}  
+                    <a class="btn btn-default disabled"><span class="icon_plus_alt2"></span> Adicionar tarea</a>
+                    <a class="btn btn-primary disabled"><span class="icon_cog"></span> Editar equipo</a>
+                    <a class="btn btn-danger disabled"><span class="fa fa-trash-o"></span> Eliminar equipo</a>
+                {% endif %}
+
+                <br>
+            </div>
+        </div>
+        <br>
+
+        <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="AdicionarTarea" class="modal fade">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                <h4 class="modal-title">Adicionar tarea</h4>
+              </div>
+              <div class="modal-body">
+
+              <form method="post" action="{% url 'teamwork:AdicionarTarea' equipo.pk%}">
+                  {% csrf_token %}
+                  <div id="err" class="alert alert-block alert-danger fade in">
+                        <strong>Error</strong>
+                            , el estudiante no pertenece al equipo.
+                  </div>
+                  <div class="form-group">
+                    <label>Nombre</label>
+                    <input name="nombre" class="form-control" placeholder="Nombre de la tarea">
+                  </div>
+                  <div class="form-group">
+                    <label>Descripcion</label>
+                    <textarea style="width: 550px; height: 100px; max-width: 550px; min-width: 550px; min-height: 100px" class="form-control " id="ccomment" name="descripcion" placeholder="Descripcion de la tarea" data-height="180" required></textarea>
+                  </div>
+                  <div class="form-group">
+                    <label>Estudiante</label>
+                    <input class="form-control" id="filtrarest" list="est" name="estudiante" placeholder="Nombre del estudiante" required/>
+                    <datalist id ="est"/>
+                    {% for e in equipo.integrantes.all %}
+                         <option value="{{ e }}"/>
+                    {% endfor %}
+                  </div>
+                  <div class="form-group">
+                        <input id="submit" class="btn btn-primary" type="submit" value="Adicionar">
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!--PDF-->
+         <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="PDF" class="modal fade">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                <h4 class="modal-title">Exportar</h4>
+              </div>
+              <div class="modal-body">
+
+              <form method="post" action="{% url 'teamwork:pdf_view' equipo.pk %}">
+                  {% csrf_token %}
+                  <div class="form-group">
+                    <label>Tema del Trabajo:</label>
+                    <input name="nombre" class="form-control" placeholder="Nombre de la tarea">
+                  </div>
+                
+                  <div class="form-group">
+                        <input id="submit" class="btn btn-primary" type="submit" value="Exportar">
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      <h4 class="">Progreso de las tareas</h4>
+      <div class="progress progress-animated">
+          <div class="progress-bar progress-bar-success tooltips" style="width: {{ a }}%" data-placement="bottom" data-toggle="tooltip " title="Tareas Finalizadas">
+              <span class="">{{ a|floatformat }}% [{{ cant_hecho }}]</span>
+          </div>
+          <div class="progress-bar progress-bar-warning tooltips" style="width: {{ b }}%" data-placement="bottom" data-toggle="tooltip " title="Tareas Pendientes">
+            <span class="">{{ b|floatformat }}% [{{ cant_pend }}]</span>
+          </div>
+          <div class="progress-bar progress-bar-danger tooltips" style="width: {{ c }}%" data-placement="bottom" data-toggle="tooltip " title="Tareas por Hacer">
+            <span class="">{{ c|floatformat }}% [{{ cant_sinhacer }}]</span>
+          </div>
+      </div>
+
+       <!-- page start-->
+        <div class="row">
+          <div class="col-sm-8">
+            <section class="panel">
+              <header class="panel-heading">
+                Tareas
+              </header>
+              {% if total > 0 %}
+                  <table class="table table-striped table-advance table-hover">
+                    <tbody>
+                      <tr>
+                        <th><i class="icon_calendar"></i> Nombre</th>
+                        <th><i class="icon_profile"></i> Estudiante</th>
+                        <th><i class="icon_archive"></i> Estado</th>
+                        <th><i class="icon_cogs"></i> Acciones</th>
+                      </tr>
+                      {% for t in tareas %}
+                          <tr>
+                              <th> {{ t.nombre }} </th>
+                              <th> <a href="{% url 'teamwork:MostrarPerfil' t.estudiante.pk %}"> {{ t.estudiante }} </a></th>
+                                {% if t.hecho == 2 %}
+                                     <td> <span class="label label-success">Hecho</span> </td>
+                                {% elif t.hecho == 1 %}
+                                    <td> <span class="label label-warning">Pendiente</span> </td>
+                                {% else %}
+                                     <td> <span class="label label-danger">Sin hacer</span> </td>
+                                {% endif %}
+                               <th>
+                                      <div class="btn-group">
+                                        <a class="btn btn-success" href="{% url 'teamwork:VerTarea' t.pk %}"><i class="icon_documents"></i></a>
+                                        {% if equipo.jefe == usuario_log %}
+                                            <a class="btn btn-danger" href="{% url 'teamwork:EliminarTareaVistaVerEquipo' equipo.pk t.pk %}"><i class="fa fa-trash-o"></i></a>
+                                        {% else %}
+                                            <a class="btn btn-danger disabled" href="{% url 'teamwork:EliminarTareaVistaVerEquipo' equipo.pk t.pk %}"><i class="fa fa-trash-o"></i></a>
+                                        {% endif %}
+                                      </div>
+                                </th>
+                          </tr>
+                     {% endfor %}
+                    </tbody>
+                  </table>
+              {% else %}
+                  No hay tareas.
+              {% endif %}
+            </section>
+          </div>
+
+        <div class="col-sm-4">
+            <section class="panel">
+              <header class="panel-heading">
+                Integrantes
+              </header>
+              <table class="table table-striped table-advance table-hover">
+                <tbody>
+                  <tr>
+                    <th><i class="fa fa-group"></i> Nombre</th>
+                  </tr>
+                  {% for e in equipo.integrantes.all %}
+                      <tr>
+                          <th>
+                              {% if equipo.jefe.pk == e.pk %}
+                                  <i class="icon_star"></i>
+                              {% endif %}
+                              <a href="{% url 'teamwork:MostrarPerfil' e.pk %}"> {{ e }} </a>
+                          </th>
+                      </tr>
+                 {% endfor %}
+                </tbody>
+              </table>
+            </section>
+          </div>
+
+        <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="MostrarMensajes" class="modal fade row">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <div class="pull-left">Discusion</div>
+                <div class="widget-icons pull-right">
+                  <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                </div>
+                <div class="clearfix"></div>
+              </div>
+
+              <div class="panel-body">
+                <div class="panel-group m-bot20" id="accordion">
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                                      <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                                          Mensajes
+                                      </a>
+                                  </h4>
+                </div>
+                <div id="collapseOne" class="panel-collapse collapse in">
+                  <div class="panel-body">
+                    <div class="padd sscroll">
+
+                  <ul class="chats">
+
+                    {% for mens in mensajes %}
+                        {% if mens.de.pk == usuario_log.pk %}
+                            <li class="by-me">
+                              <div class="avatar pull-left">
+                                <img src="img/user.jpg" alt="" />
+                              </div>
+
+                              <div class="chat-content"> <!--style="background-color: #b5efb5"-->
+                                <div class="chat-meta"> <a style="color: limegreen" href="{% url 'teamwork:MostrarPerfil' mens.de.pk %}"> {{ mens.de }} </a><span class="pull-right"> {{ mens.fecha }} </span></div>
+                                    <a style="color: #1e90ff" href="{% url 'teamwork:VerTarea' mens.tarea.pk %}"> #{{ mens.tarea.nombre }} </a> {{ mens.texto }}
+                                <div class="clearfix"></div>
+                              </div>
+                            </li>
+                        {% else %}
+                            <li class="by-other">
+                              <div class="avatar pull-right">
+                                <img src="img/user22.png" alt="" />
+                              </div>
+
+                              <div class="chat-content">
+                                <div class="chat-meta"> {{ mens.fecha }} <span class="pull-right"> <a style="color: crimson" href="{% url 'teamwork:MostrarPerfil' mens.de.pk %}"> {{ mens.de }} </a></span></div>
+                                  <a style="color: #1e90ff" href="{% url 'teamwork:VerTarea' mens.tarea.pk %}"> #{{ mens.tarea.nombre }} </a> {{ mens.texto }}
+                                <div class="clearfix"></div>
+                              </div>
+                            </li>
+                        {% endif %}
+                     {% endfor %}
+                            <li class="by-me">
+                              <div class="avatar pull-left">
+                                <img src="img/user.jpg" alt="" />
+                              </div>
+
+                              <div class="chat-content"> <!--style="background-color: #b5efb5"-->
+                                <form method="post" action="{% url 'teamwork:Comentar' equipo.pk %}">
+                                {% csrf_token %}
+                                <div class="chat-meta" style="color: #b5efb5;"> <a style="color: limegreen" href=""> {{ usuario_log }} </a><span class="pull-right">  </span></div>
+                                    <font color="#1e90ff"> #<select name="tarea" style="border: none">
+                                        {% for t in tareas %}
+                                            <option value="{{ t.pk }}" selected>{{ t.nombre }}</option>
+                                        {% endfor %}
+                                    </select> </font> <input style="border: none" name="texto" type="text" placeholder="Escriba su comentario..." maxlength="80" on required>
+                                    <button type="submit" class="btn btn-primary">Comentar</button>
+                                </form>
+                                <div class="clearfix"></div>
+                              </div>
+                            </li>
+                  </ul>
+
+                </div>
+                  </div>
+                </div>
+              </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        </div>
+      </section>
+    </section>
+{% endblock %}

@@ -1,0 +1,76 @@
+{% extends 'teamwork/index.html' %}
+
+{% block content %}
+    <section id="main-content">
+      <section class="wrapper">
+        <!--overview start-->
+        <div class="row">
+          <div class="col-lg-12">
+            <h3 class="page-header"><i class="fa fa-tasks"></i> Tareas</h3>
+            <ol class="breadcrumb">
+              <li><a href="{% url 'teamwork:index' %}"><i class="fa fa-home"></i> Home</a></li>
+              <li><a href="{% url 'teamwork:MostrarTareas' %}"><i class="fa fa-tasks"></i> Tareas</a></li>
+              <li><a href="{% url 'teamwork:VerTarea' tarea.pk %}"><i class="fa fa-tasks"></i> {{ tarea.nombre }}</a></li>
+              <li><a href="{% url 'teamwork:VistaEditarTarea' tarea.pk %}"><i class="fa fa-cog"></i> Editar</a></li>
+            </ol>
+          </div>
+        </div>
+
+    <div class="row">
+          <div class="col-lg-12">
+            <section class="panel">
+              <header class="panel-heading">
+                Editar tarea
+              </header>
+              <div class="panel-body">
+                <div class="form">
+                  <form class="form-validate form-horizontal" id="feedback_form" method="post" action="{% url 'teamwork:EditarTarea' tarea.pk  %}">
+                      {% csrf_token %}
+                            <div id="err" class="alert alert-block alert-danger fade in">
+                            <strong>Error</strong>
+                                , el estudiante no pertenece al equipo.
+                        </div>
+                          <div class="form-group ">
+                              <label for="cname" class="control-label col-lg-2"> Nombre </label>
+                              <div class="col-lg-10">
+                                <input class="form-control" id="cname" name="nombre" maxlength="10" value="{{ tarea.nombre }}"  required />
+                              </div>
+                          </div>
+
+                        <div class="form-group ">
+                              <label for="ccomment" class="control-label col-lg-2">Descripción</label>
+                              <div class="col-lg-10">
+                                <textarea class="form-control " id="ccomment" name="descripcion" required>{{ tarea.descripcion }}</textarea>
+                              </div>
+                         </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-lg-2">Estudiante</label>
+                                <div class="col-lg-10">
+                                <input class="form-control" id="filtrarest" list="est" name="estudiante" value="{{ tarea.estudiante }}" required/>
+                                <datalist id ="est"/>
+                                {% for e in tarea.equipo.integrantes.all %}
+                                     <option value="{{ e }}"/>
+                                {% endfor %}
+                                </div>
+                        </div>
+                        <div class="form-group">
+                          <div class="col-lg-offset-2 col-lg-10">
+                            <input id="submit" class="btn btn-primary" type="submit" value="Editar">
+                          </div>
+                        </div>
+
+                  </form>
+                </div>
+
+              </div>
+            </section>
+          </div>
+        </div>
+
+       </div>
+      </div>
+      </section>
+    </section>
+
+{% endblock %}

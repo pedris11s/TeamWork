@@ -1,0 +1,59 @@
+﻿<head>
+    <meta charset="utf-8">
+    <style type="text/css">
+        .header {
+            font-family: "Arial", arial;
+            text-align: center;
+        }
+        .left {
+            font-family: "Arial", arial;
+            text-align: left;
+        }
+        .answer {
+            font-family: "Arial", arial;
+            text-align: justify;
+        }
+        .question{
+            font-family: "Arial Black", arial;
+            text-align: justify;
+        }
+        .allProject{
+            margin-left: 4%;
+            margin-right: 2%;
+            margin-top: 4%;
+            margin-bottom: 2%;
+        }
+        .tabb{
+            margin-left: 5%;
+        }
+    </style>
+</head>
+<body>
+    <div class="allProject">
+
+        <h1 class="header">Asignatura: {{ equipo.asignatura.nombre }}</h1>
+        <h3 class="header">Tema: {{ tema }} </h3>
+        <h3 class="left"> Integrantes: </h3>
+        <ol>
+            {% for e in list %}
+                <li type=""> {{ e }} </li>
+            {% endfor %}
+        </ol>
+        {% for q in answer %}
+        <div class="question">
+            <span class="">
+                <p>
+                    {{ q.descripcion }} :
+                </p>
+            </span>
+        </div>
+        <div class="answer">
+            <span class="">
+                <p>
+                    {{ q.respuesta }}
+                </p>
+            </span>
+        </div>
+        {% endfor %}
+    </div>
+</body>

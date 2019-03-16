@@ -1,0 +1,101 @@
+{% extends 'teamwork/index.html' %}
+
+{% block content %}
+    <section id="main-content">
+      <section class="wrapper">
+        <!--overview start-->
+        <div class="row">
+          <div class="col-lg-12">
+            <h3 class="page-header"><i class="fa fa-group"></i> Equipos</h3>
+            <ol class="breadcrumb">
+              <li><a href="{% url 'teamwork:index' %}"><i class="fa fa-home"></i> Home</a></li>
+              <li><a href="{% url 'teamwork:MostrarEquipos' %}"><i class="fa fa-group"></i> Equipos</a></li>
+            </ol>
+          </div>
+        </div>
+
+      <div class="row">
+          <div class="col-lg-12">
+            <a class="btn btn-primary" href="#AdicionarEquipo" data-toggle="modal"><span class="icon_plus_alt2"></span>  Adicionar equipo</a>
+          </div>
+          <br>
+      </div>
+
+      <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="AdicionarEquipo" class="modal fade">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                <h4 class="modal-title">Adicionar equipo</h4>
+              </div>
+              <div class="modal-body">
+                <form class="form-inline" method="post" action="{% url 'teamwork:AdicionarEquipo' %}">
+                    {% csrf_token %}
+                  <div class="form-group">
+                    <label class="sr-only" for="exampleInputEmail2">Nombre</label>
+                    <input name="nombre" class="form-control sm-input" id="exampleInputEmail5" placeholder="Nombre">
+                  </div>
+                  <div class="form-group">
+                    <label class="sr-only" for="exampleInputPassword2">Asignatura</label>
+                        <select name="asig" class="form-control sm-input" id="exampleInputPassword5" required>
+                            {% for a in asig %}
+                                <option value="{{ a.pk }}">{{ a }}</option>
+                            {% endfor %}
+
+                      </select>
+                  </div>
+                  <input type="submit" class="btn btn-primary" value="Adicionar"/>
+                </form>
+
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+
+
+        <div class="row">
+              <div class="col-lg-12">
+                <section class="panel">
+              <header class="panel-heading">
+                  Mis equipos
+              </header>
+                {% if misequipos|length > 0 %}
+                  <table class="table table-striped table-advance table-hover">
+                    <tbody>
+                      <tr>
+                        <th><i class="icon_profile"></i> Nombre</th>
+                        <th><i class="icon_calendar"></i> Jefe</th>
+                        <th><i class="icon_book_alt"></i> Asignatura</th>
+                        <th><i class="icon_cogs"></i> Acciones</th>
+                      </tr>
+                      {% for e in misequipos|dictsort:"jefe.user" %}
+                          <tr>
+                                <th> {{ e.nombre }} </th>
+                                <th> <a href="{% url 'teamwork:MostrarPerfil' e.jefe.pk %}"> {{ e.jefe }} </a></th>
+                                <th> {{ e.asignatura }} </th>
+                                <td>
+                                  <div class="btn-group">
+                                      <a class="btn btn-success" href="{% url 'teamwork:VerEquipo' e.pk %}"><i class="icon_documents"></i></a>
+                                      {% if e.jefe == usuario_log %}
+                                          <a class="btn btn-primary" href="{% url 'teamwork:VistaEditarEquipo' e.pk %}"><i class="icon_cog"></i></a>
+                                          <a class="btn btn-danger" href="{% url 'teamwork:EliminarEquipo' e.pk %}"><i class="fa fa-trash-o"></i></a>
+                                      {% else %}
+                                          <a class="btn btn-primary disabled" href="{% url 'teamwork:VistaEditarEquipo' e.pk %}"><i class="icon_cog"></i></a>
+                                          <a class="btn btn-danger disabled" href="{% url 'teamwork:EliminarEquipo' e.pk %}"><i class="fa fa-trash-o"></i></a>
+                                      {% endif %}
+                                  </div>
+                                </td>
+                          </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                {% else %}
+                    <div class="alert alert-danger fade in">No pertenece a ningun equipo.</div>
+                {% endif %}
+                </section>
+              </div>
+            </div>
+
+{% endblock %}

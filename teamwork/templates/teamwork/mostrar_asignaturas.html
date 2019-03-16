@@ -1,0 +1,79 @@
+{% extends 'teamwork/index.html' %}
+
+{% block content %}
+    <section id="main-content">
+      <section class="wrapper">
+        <!--overview start-->
+        <div class="row">
+          <div class="col-lg-12">
+            <h3 class="page-header"><i class="fa fa-book"></i> Asignaturas</h3>
+            <ol class="breadcrumb">
+              <li><a href="{% url 'teamwork:index' %}"><i class="fa fa-home"></i> Home</a></li>
+              <li><a href="{% url 'teamwork:MostrarAsignaturas' %}"><i class="fa fa-book"></i> Asignaturas</a></li>
+            </ol>
+          </div>
+        </div>
+
+      <div class="row">
+          <div class="col-lg-12">
+            <a class="btn btn-primary" href="#AdicionarAsignatura" data-toggle="modal"><span class="icon_plus_alt2"></span>  Adicionar asignatura</a>
+          </div>
+          <br>
+      </div>
+
+      <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="AdicionarAsignatura" class="modal fade">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                <h4 class="modal-title">Adicionar asignatura</h4>
+              </div>
+              <div class="modal-body">
+                <form class="form-inline" method="post" action="{% url 'teamwork:AdicionarAsignatura' %}">
+                    {% csrf_token %}
+                  <div class="form-group">
+                    <label class="sr-only" for="exampleInputEmail2">Nombre</label>
+                    <input name="nombre_asig" class="form-control sm-input" id="exampleInputEmail5" placeholder="Nombre" required>
+                  </div>
+                  <input type="submit" class="btn btn-primary" value="Adicionar"/>
+                </form>
+
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+    <div class="row">
+          <div class="col-lg-12">
+            <section class="panel">
+              <header class="panel-heading">
+                Asignaturas
+              </header>
+                {% if asig.count > 0 %}
+                  <table class="table table-striped table-advance table-hover">
+                    <tbody>
+                      <tr>
+                        <th><i class="icon_book_alt"></i> Nombre</th>
+                        <th><i class="icon_cogs"></i> Acciones</th>
+                      </tr>
+                      {% for a in asig %}
+                          <tr>
+                                <th> {{ a.nombre }} </th>
+                                <th>
+                                  <div class="btn-group">
+                                    <a class="btn btn-success disabled" href="{% url 'teamwork:VistaEditarAsignatura' a.pk %}"><i class="icon_documents"></i></a>
+                                    <a class="btn btn-danger disabled" href="{% url 'teamwork:EliminarAsignatura' a.pk %}"><i class="fa fa-trash-o"></i></a>
+                                  </div>
+                                </th>
+                          </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+            {% else %}
+                <div class="alert alert-danger fade in">No existe ninguna asignatura aun.</div>
+            {% endif %}
+            </section>
+          </div>
+        </div>
+{% endblock %}

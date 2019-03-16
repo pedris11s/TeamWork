@@ -1,0 +1,237 @@
+{% extends 'teamwork/index.html' %}
+
+{% block content %}
+
+    <section id="main-content">
+      <section class="wrapper">
+        <div class="row">
+          <div class="col-lg-12">
+            <h3 class="page-header"><i class="fa fa-user-md"></i> Perfil</h3>
+            <ol class="breadcrumb">
+              <li><a href=" {% url 'teamwork:index' %} "><i class="fa fa-home"></i>Home</a></li>
+              <li><a href=" {% url 'teamwork:MostrarPerfil' usuario_log.pk %} "><i class="fa fa-user-md"></i> Perfil</a></li>
+            </ol>
+          </div>
+        </div>
+        <div class="row">
+          <!-- profile-widget -->
+          <div class="col-lg-12">   
+            <div class="profile-widget profile-widget-info">
+              <div    class="panel-body">
+                <div class="col-lg-2 col-sm-2">
+                  <h4>{{ usuario }}</h4>
+                  <div   class="follow-ava">
+                    <i class="fa fa-user"></i>
+                  </div>
+                  <h6>@{{ usuario.user }}</h6>
+                </div>
+                <div class="col-lg-4 col-sm-4 follow-info">
+                  <p> {{ usuario.user }}@estudiantes.uci.cu</p>
+                  <p><i class="fa fa-twitter">{{ usuario.user }}tweet</i></p>
+
+                </div>
+                <div class="col-lg-2 col-sm-6 follow-info weather-category">
+                  <ul>
+                    <li class="active">
+
+                      <i class="fa fa-comments fa-2x"> </i><br> Ha sido parte de {{ total_misequipos }} equipo(s).
+                    </li>
+
+                  </ul>
+                </div>
+                <div class="col-lg-2 col-sm-6 follow-info weather-category">
+                  <ul>
+                    <li class="active">
+
+                      <i class="fa fa-bell fa-2x"> </i><br> Ha sido jefe de {{ total_teams_jefe }} equipo(s).
+                    </li>
+
+                  </ul>
+                </div>
+                <div class="col-lg-2 col-sm-6 follow-info weather-category">
+                  <ul>
+                    <li class="active">
+
+                      <i class="fa fa-tachometer fa-2x"> </i><br> Ha resuelto {{ total_tareas_hechas }} de {{ total_tareas }} tarea(s).
+                    </li>
+
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- page start-->
+        <div class="row">
+          <div class="col-lg-12">
+            <section class="panel">
+              <header class="panel-heading tab-bg-info">
+                <ul class="nav nav-tabs">
+                    {% if usuario.pk == usuario_log.pk %}
+                          <li class="active">
+                            <a data-toggle="tab" href="#Notificaciones">
+                                                  <i class="icon-home"></i>
+                                                  Notificaciones
+                                              </a>
+                          </li>
+                                <!--<li class="">
+                            <a data-toggle="tab" href="#edit-profile">
+                                                  <i class="icon-envelope"></i>
+                                                  Editar Perfil
+                                              </a>
+                          </li> -->
+                    {% endif %}
+                  <li class="">
+                    <a data-toggle="tab" href="#profile">
+                                          <i class="icon-user"></i>
+                                          Equipos
+                    </a>
+                  </li>
+                </ul>
+              </header>
+
+              <div class="panel-body">
+                <div class="tab-content">
+
+                 {% if usuario.pk == usuario_log.pk %}
+                  <div id="Notificaciones" class="tab-pane active">
+                    <div class="btn-group pull-right">
+                        <!--<a class="btn btn-danger" href=""><i class="fa fa-trash-o"></i> Eliminar todas</a>-->
+                    </div>
+                    <br><br>
+                    <div id="recent-activity" class="tab-pane active">
+                    <div class="profile-activity">
+                        {% for noti in notificaciones_nuevas %}
+                              <div class="act-time">
+                                <div class="activity-body act-in">
+                                  <div class="text">
+                                      <p class="attribution"> en {{ noti.fecha }} </p>
+                                      <p>
+                                        {% if noti.tipo == 'add_team' %}
+                                            <span style="width: 10px; max-width: 10px" class="label label-primary"><i class="icon_group"></i></span>
+                                        {% elif noti.tipo == 'del_team' %}
+                                            <span style="width: 10px; max-width: 10px" class="label label-danger"><i class="icon_group"></i></span>
+                                        {% elif noti.tipo == 'add_tarea' %}
+                                            <span style="width: 10px; max-width: 10px" class="label label-primary"><i class="fa fa-tasks"></i></span>
+                                        {% elif noti.tipo == 'del_tarea' %}
+                                            <span style="width: 10px; max-width: 10px" class="label label-danger"><i class="fa fa-tasks"></i></span>
+                                        {% elif noti.tipo == 'approve_tarea' %}
+                                            <span style="width: 10px; max-width: 10px" class="label label-success"><i class="icon_check_alt2"></i></span>
+                                        {% elif noti.tipo == 'pending_tarea' %}
+                                            <span style="width: 10px; max-width: 10px" class="label label-warning"><i class="fa fa-folder"></i></span>
+                                        {% elif noti.tipo == 'denied_tarea' %}
+                                            <span style="width: 10px; max-width: 10px" class="label label-danger"><i class="icon_minus_alt2"></i></span>
+                                        {% elif noti.tipo == 'new_mesage' %}
+                                            <span style="width: 10px; max-width: 10px" class="label label-primary"><i class="fa fa-mail-reply"></i></span>
+                                        {% endif %}
+                                        {{ noti.descripcion }}<span class="badge bg-error">new</span>
+                                      </p>
+                                  </div>
+                                </div>
+                              </div>
+                        {% endfor %}
+
+                        {% for noti in notificaciones_viejas %}
+                              <div class="act-time">
+                                <div class="activity-body act-in">
+                                  <div class="text">
+                                      <p class="attribution"> en {{ noti.fecha }} </p>
+                                        <p>
+                                            {% if noti.tipo == 'add_team' %}
+                                                <span style="width: 10px; max-width: 10px" class="label label-primary"><i class="icon_group"></i></span>
+                                            {% elif noti.tipo == 'del_team' %}
+                                                <span style="width: 10px; max-width: 10px" class="label label-danger"><i class="icon_group"></i></span>
+                                            {% elif noti.tipo == 'add_tarea' %}
+                                                <span style="width: 10px; max-width: 10px" class="label label-primary"><i class="fa fa-tasks"></i></span>
+                                            {% elif noti.tipo == 'del_tarea' %}
+                                                <span style="width: 10px; max-width: 10px" class="label label-danger"><i class="fa fa-tasks"></i></span>
+                                            {% elif noti.tipo == 'approve_tarea' %}
+                                                <span style="width: 10px; max-width: 10px" class="label label-success"><i class="icon_check_alt2"></i></span>
+                                            {% elif noti.tipo == 'pending_tarea' %}
+                                                <span style="width: 10px; max-width: 10px" class="label label-warning"><i class="fa fa-folder"></i></span>
+                                            {% elif noti.tipo == 'denied_tarea' %}
+                                                <span style="width: 10px; max-width: 10px" class="label label-danger"><i class="icon_minus_alt2"></i></span>
+                                            {% elif noti.tipo == 'new_mesage' %}
+                                                <span style="width: 10px; max-width: 10px" class="label label-primary"><i class="fa fa-mail-reply"></i></span>
+                                            {% endif %}
+                                            {{ noti.descripcion }}
+                                  </div>
+                                </div>
+                              </div>
+                        {% endfor %}
+                    </div>
+
+                  </div>
+                {% endif %}
+                  <!-- profile -->
+                  <div id="profile" class="tab-pane {% if usuario.pk != usuario_log.pk %} active {% endif %}">
+                    <section class="panel">
+                      <div class="panel-body bio-graph-info">
+                        <h3>Teams:</h3>
+
+                      </div>
+                      <div class="bio-graph-heading">
+                        {% if total_misequipos < 1 %}
+                            No pertenece a ningun equipo.
+                        {% endif %}
+                        {% for e in equipos_perfil %}
+                            <div class="tooltips"  data-placement="bottom" data-toggle="tooltip " title="Realizadas: {{ e.3 }} | Por Hacer: {{ e.4 }}">
+                                  <div class="task-info">
+                                    <div class="desc"> {{ e.0.nombre }} - {{ e.1|floatformat }}%</div>
+                                  </div>
+                                  <div class="progress progress-striped active">
+                                    <div class="progress-bar progress-bar-{{ e.2 }}" role="progressbar" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100" style="width: {{ e.1 }}%">
+                                      <span class="sr-only">{{ e.1|floatformat }}% Complete (success)</span>
+                                    </div>
+                                  </div>
+                            </div>
+                        {% endfor %}
+                      </div>
+                    </section>
+                    <section>
+                      <div class="row">
+                      </div>
+                    </section>
+                  </div>
+                  <!-- edit-profile -->
+                <!--% if usuario.pk == usuario_log.pk %}
+                  <div id="edit-profile" class="tab-pane">
+                    <section class="panel">
+                      <div class="panel-body bio-graph-info">
+                        <h1> Datos de Usuario </h1>
+                        <form class="form-horizontal" method="post" action="% url 'teamwork:EditarPerfil' usuario_log.pk %}">
+                          % csrf_token %}
+                          <div class="form-group">
+                            <label class="col-lg-2 control-label">Correo</label>
+                            <div class="col-lg-6">
+                              <input name="email" type="email" class="form-control" id="c-name" placeholder="email" required>
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <label class="col-lg-2 control-label">Contrasenha</label>
+                            <div class="col-lg-6">
+                              <input name="password" type="password" class="form-control" id="b-day" placeholder="password" required>
+                            </div>
+                          </div>
+
+                          <div class="form-group">
+                            <div class="col-lg-offset-2 col-lg-10">
+                              <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+                    </section>
+                  </div>
+                {endif %} -->
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+
+        <!-- page end-->
+      </section>
+    </section>
+
+{% endblock %}
